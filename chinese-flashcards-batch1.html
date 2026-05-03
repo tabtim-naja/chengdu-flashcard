@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>🐼 Chengdu Cards — Batch 1</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;700;900&family=Noto+Sans+SC:wght@400;700;900&family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:#ddd6c8;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Caveat','Noto Sans Thai',sans-serif;padding:16px}
+    .app-header{text-align:center;margin-bottom:10px}
+    .app-title{font-size:22px;color:#444;font-family:'Caveat',sans-serif}
+    .month-badge{display:inline-block;padding:3px 16px;border-radius:20px;font-size:13px;font-family:'Noto Sans Thai',sans-serif;margin-top:4px;color:#fff}
+
+    /* Progress bar */
+    .prog-wrap{width:100%;max-width:460px;margin-bottom:12px}
+    .prog-bar-bg{background:#c5bdb2;border-radius:20px;height:8px;width:100%;overflow:hidden}
+    .prog-bar-fill{background:#555;border-radius:20px;height:8px;transition:width 0.35s ease}
+    .prog-text{text-align:center;font-size:13px;color:#666;margin-top:4px;font-family:'Noto Sans Thai',sans-serif}
+
+    /* CARD */
+    .card{background:#f5f0e6;border-radius:28px;padding:24px 20px 20px;box-shadow:5px 8px 24px rgba(0,0,0,.15);width:100%;max-width:460px;min-height:540px;position:relative}
+
+    /* --- HEADER --- */
+    .card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
+    .word-section{flex:1;text-align:center}
+    .cat-badge{display:inline-block;background:#444;color:#f5f0e6;font-size:11px;padding:2px 12px;border-radius:20px;margin-bottom:6px;font-family:'Noto Sans Thai',sans-serif}
+    .blob-wrap{position:relative;display:inline-block;padding:6px 16px 10px;margin-bottom:2px}
+    .blob-wrap::before{content:'';position:absolute;inset:0;background:var(--bc,#7ECFC0);border-radius:58% 62% 55% 68%/60% 55% 65% 58%;z-index:0}
+    .zh-main{font-family:'Noto Sans SC',sans-serif;font-size:54px;font-weight:900;color:#1a1a1a;position:relative;z-index:1;line-height:1.05;letter-spacing:4px}
+    .py-main{font-size:17px;color:#555;margin-top:4px;font-family:'Caveat',sans-serif;letter-spacing:1px}
+    .th-main{font-size:20px;font-weight:700;color:#222;margin-top:2px;font-family:'Noto Sans Thai',sans-serif}
+    .emoji-box{font-size:52px;line-height:1;padding-left:8px;padding-top:4px;flex-shrink:0}
+
+    hr{border:none;border-top:1.5px solid #ccc;margin:10px 0}
+
+    /* Section label */
+    .sec-label{font-size:18px;font-weight:700;color:#1a1a1a;font-family:'Caveat',sans-serif;display:inline-block;border-bottom:2.5px wavy #888;padding-bottom:1px;margin-bottom:10px}
+
+    /* Radicals */
+    .rad-row{display:flex;align-items:flex-start;margin-bottom:9px;font-size:14.5px;line-height:1.55;color:#2a2a2a}
+    .rad-row::before{content:'– ';flex-shrink:0;margin-top:1px}
+    .hl{display:inline-block;padding:0 10px 1px;border-radius:50px;font-family:'Noto Sans SC',sans-serif;font-weight:700;font-size:18px;vertical-align:middle;margin-right:2px}
+    .ho{background:#FFD580}.hg{background:#A8E6C8}.hb{background:#B3D8FF}.hp{background:#FFB8C6}
+    .sub{display:block;margin-left:20px;font-size:13px;color:#666;line-height:1.4;margin-top:2px}
+    .sub::before{content:'↳ '}
+
+    /* Trick */
+    .trick{background:#FFD580;border-radius:14px;padding:10px 14px;margin:10px 0 8px;font-size:14.5px;line-height:1.55;color:#1a1a1a}
+    .tl{font-weight:700;font-size:16px;font-family:'Caveat',sans-serif}
+
+    /* Extra tip */
+    .extra{background:#e8f4fd;border-radius:12px;padding:8px 12px;margin-bottom:8px;font-size:13px;color:#2a5f8f;line-height:1.5}
+    .extra::before{content:'📌 '}
+
+    /* Examples */
+    .ex-item{margin-bottom:10px;font-size:14.5px;line-height:1.5}
+    .ex-item::before{content:'– '}
+    .zh-s{font-family:'Noto Sans SC',sans-serif;font-weight:700;font-size:16px;color:#1a1a1a}
+    .py-s{display:block;margin-left:12px;font-size:12px;color:#777}
+    .th-s{display:block;margin-left:12px;font-size:13.5px;color:#c0392b;font-family:'Noto Sans Thai',sans-serif}
+
+    /* Nav */
+    .nav{display:flex;justify-content:space-between;align-items:center;margin-top:14px;width:100%;max-width:460px;gap:10px}
+    .nav-btn{background:#f5f0e6;border:2.5px solid #333;border-radius:50px;padding:9px 22px;font-size:17px;cursor:pointer;font-family:'Caveat',sans-serif;box-shadow:3px 3px 0 #333;transition:all .12s;color:#1a1a1a}
+    .nav-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:4px 5px 0 #333}
+    .nav-btn:active:not(:disabled){transform:translateY(1px);box-shadow:1px 2px 0 #333}
+    .nav-btn:disabled{opacity:.35;cursor:default}
+    .hint{font-size:12px;color:#888;text-align:center;margin-top:8px;font-family:'Noto Sans Thai',sans-serif}
+
+    /* Month divider card */
+    .month-divider{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:540px;text-align:center;gap:12px}
+    .month-num{font-size:64px;line-height:1}
+    .month-th{font-size:22px;font-family:'Noto Sans Thai',sans-serif;font-weight:700;color:#1a1a1a}
+    .month-en{font-size:16px;color:#666;font-family:'Caveat',sans-serif}
+    .month-topics{background:rgba(0,0,0,.06);border-radius:14px;padding:12px 18px;font-size:14px;font-family:'Noto Sans Thai',sans-serif;color:#333;line-height:1.8;text-align:left;width:100%}
+  </style>
+</head>
+<body>
+
+<div class="app-header">
+  <div class="app-title">🐼 Chengdu Cards</div>
+  <div id="mbadge" class="month-badge">loading...</div>
+</div>
+
+<div class="prog-wrap">
+  <div class="prog-bar-bg"><div class="prog-bar-fill" id="pbar" style="width:0%"></div></div>
+  <div class="prog-text" id="ptext">-</div>
+</div>
+
+<div class="card" id="card"></div>
+
+<div class="nav">
+  <button class="nav-btn" id="prev" onclick="go(-1)">← ก่อน</button>
+  <button class="nav-btn" id="next" onclick="go(1)">ถัดไป →</button>
+</div>
+<p class="hint">Batch 1 · 12 cards · พ.ค.–มิ.ย.</p>
+
+<script>
+const MONTHS = {
+  1: { label:"เดือน 1 — พฤษภาคม", color:"#6BBFAD", icon:"🌱" },
+  2: { label:"เดือน 2 — มิถุนายน", color:"#E8845A", icon:"🌶️" }
+};
+
+const cards = [
+  // ===== MONTH DIVIDER 1 =====
+  { type:"divider", month:1, topics:["ทักทาย / ขอบคุณ / ขอโทษ","ถามราคา","ห้องน้ำ (survival!)","อร่อย / ไม่อร่อย"] },
+
+  // ===== MONTH 1 =====
+  {
+    month:1, word:"你好", py:"( nǐ  hǎo )", mean:"สวัสดี / หวัดดี",
+    blob:"#7ECFC0", emoji:"👋", badge:"ทักทาย • พื้นฐาน",
+    radicals:[
+      { hl:"你", hc:"ho", py:"nǐ", mn:"คุณ",
+        dt:"亻(คน) + 尔(เสียง) → คนที่อยู่ตรงหน้าฉัน = คุณ",
+        sb:"亻 คือ radical 'คน' ย่อมาจาก 人 → พบในคำที่เกี่ยวกับคนเสมอ เช่น 他(เขา) 她(เธอ)" },
+      { hl:"好", hc:"hg", py:"hǎo", mn:"ดี",
+        dt:"女(ผู้หญิง) + 子(ลูก/เด็ก) → ผู้หญิงมีลูก = ความสุข = ดี",
+        sb:"好 เจ๋งมาก! ใช้ได้หลายแบบ: 好吃(อร่อย) 好看(สวย) 好玩(สนุก)" }
+    ],
+    trick:"你好 = 'คุณ + ดี' → ทักทายด้วยการบอกว่า 'คุณดีนะ!' เหมือนฝรั่งพูด 'How are you?' แต่กระชับกว่า 😄",
+    examples:[
+      { zh:"你好！我是泰国人。", py:"(Nǐ hǎo! Wǒ shì Tàiguó rén.)", th:"สวัสดี! ฉันเป็นคนไทย" },
+      { zh:"你好，请问厕所在哪？", py:"(Nǐ hǎo, qǐngwèn cèsuǒ zài nǎ?)", th:"สวัสดีค่ะ ขอถามว่าห้องน้ำอยู่ที่ไหนคะ?" }
+    ]
+  },
+  {
+    month:1, word:"谢谢", py:"( xiè  xie )", mean:"ขอบคุณ",
+    blob:"#FFB347", emoji:"🙏", badge:"礼貌 มารยาท",
+    radicals:[
+      { hl:"谢", hc:"ho", py:"xiè", mn:"ขอบคุณ / ลาออก",
+        dt:"讠(พูด) + 射(ยิง/ส่ง) → 'ยิงคำพูดออกไป' = ส่งคำขอบคุณออกไป",
+        sb:"讠= 言 ย่อ = การพูด → คำที่เกี่ยวกับการสื่อสารมักมี radical นี้ เช่น 说(พูด) 请(ขอ)" }
+    ],
+    trick:"谢谢 พูดซ้ำ 2 ครั้ง! 🔁 เหมือนไทยที่พูดซ้ำเพื่อเน้น ถ้าขอบคุณมากๆ พูดว่า 非常谢谢 (fēicháng xièxie) = ขอบคุณมากๆๆ",
+    examples:[
+      { zh:"谢谢你！", py:"(Xièxie nǐ!)", th:"ขอบคุณมากนะ!" },
+      { zh:"谢谢你的帮助。", py:"(Xièxie nǐ de bāngzhù.)", th:"ขอบคุณสำหรับความช่วยเหลือ" }
+    ]
+  },
+  {
+    month:1, word:"对不起", py:"( duì bu qǐ )", mean:"ขอโทษ",
+    blob:"#FF8FAB", emoji:"😔", badge:"礼貌 มารยาท",
+    radicals:[
+      { hl:"对", hc:"ho", py:"duì", mn:"ถูก / ตรงกัน",
+        dt:"เดิมมาจากรูปมือที่ถือตะเกียง → ชี้ให้ตรง → ถูกต้อง",
+        sb:"对 ยังแปลว่า 'ใช่' เช่น 对！= ใช่! / 不对 = ไม่ใช่/ผิด" },
+      { hl:"起", hc:"hg", py:"qǐ", mn:"ลุก / เริ่ม",
+        dt:"走(เดิน) + 己(ตัวเอง) → ตัวเองลุกขึ้นเดิน = ลุกขึ้น",
+        sb:"起 พบบ่อยใน: 起床(ตื่นนอน) 起来(ลุกขึ้น) 起飞(บินขึ้น)" }
+    ],
+    trick:"对不起 = 'ถูก + ไม่ + ลุก' → ฉันผิดจนไม่กล้าเงยหน้าขึ้น = ขอโทษ! 🙈  คู่กับ: 没关系 (méi guānxi) = ไม่เป็นไร",
+    examples:[
+      { zh:"对不起！我来晚了。", py:"(Duìbuqǐ! Wǒ lái wǎn le.)", th:"ขอโทษ! ฉันมาสาย" },
+      { zh:"对不起，我不会说中文。", py:"(Duìbuqǐ, wǒ bù huì shuō Zhōngwén.)", th:"ขอโทษ ฉันพูดจีนไม่ได้" }
+    ]
+  },
+  {
+    month:1, word:"多少钱", py:"( duō shao qián )", mean:"ราคาเท่าไหร่?",
+    blob:"#FFD580", emoji:"💰", badge:"ช้อปปิ้ง • survival",
+    radicals:[
+      { hl:"多", hc:"ho", py:"duō", mn:"มาก",
+        dt:"เดิมคือรูปเนื้อสองชิ้นซ้อนกัน 夕夕 → ของมากมาย = มาก",
+        sb:"คู่กับ 少(shǎo) = น้อย → 多少 = มากน้อยเท่าไหร่" },
+      { hl:"钱", hc:"hg", py:"qián", mn:"เงิน",
+        dt:"钅(โลหะ) + 戋(เล็กน้อย) → โลหะชิ้นเล็กๆ = เหรียญ = เงิน",
+        sb:"钅= 金 ย่อ = โลหะ → คำที่เกี่ยวกับเงิน/โลหะมักมี radical นี้" }
+    ],
+    trick:"多少钱 = 'มาก-น้อย + เงิน' → เงินนี้มากหรือน้อย? = ราคาเท่าไหร่! ถามก่อนซื้อทุกครั้ง 😤",
+    extra:"ตอบ: X 块 (kuài) เช่น 50块 = 50 หยวน / ถูก = 便宜(piányí) / แพง = 贵(guì)",
+    examples:[
+      { zh:"这个多少钱？", py:"(Zhège duōshao qián?)", th:"อันนี้ราคาเท่าไหร่?" },
+      { zh:"太贵了！便宜一点可以吗？", py:"(Tài guì le! Piányí yīdiǎn kěyǐ ma?)", th:"แพงไปเลย! ถูกลงหน่อยได้ไหม?" }
+    ]
+  },
+  {
+    month:1, word:"好吃", py:"( hǎo chī )", mean:"อร่อย",
+    blob:"#98D8A0", emoji:"😋", badge:"อาหาร • ทั่วไป",
+    radicals:[
+      { hl:"好", hc:"hg", py:"hǎo", mn:"ดี",
+        dt:"(เหมือน 你好) 女 + 子 → ผู้หญิงมีลูก = ดี",
+        sb:"好 + [คำกริยา] = ดีในเรื่องนั้น: 好看=สวย 好听=ไพเราะ 好玩=สนุก 好吃=อร่อย" },
+      { hl:"吃", hc:"ho", py:"chī", mn:"กิน",
+        dt:"口(ปาก) + 乞(ขอ/ขอทาน) → ปากที่ขออาหาร = กิน",
+        sb:"口 = ปาก → คำที่เกี่ยวกับปาก/เสียง เช่น 喝(ดื่ม) 叫(ร้อง) 唱(ร้องเพลง)" }
+    ],
+    trick:"好吃 = 'ดี + กิน' → กินแล้วรู้สึกดี = อร่อย! ง่ายที่สุด ใช้บ่อยที่สุดที่เฉิงตู 🔥",
+    extra:"สเกล: 还可以(hái kěyǐ)=พอได้ → 好吃=อร่อย → 非常好吃=อร่อยมาก → 太好吃了!=อร่อยสุดๆ!",
+    examples:[
+      { zh:"好吃！太好吃了！", py:"(Hǎo chī! Tài hǎo chī le!)", th:"อร่อย! อร่อยมากเลย!" },
+      { zh:"成都的火锅真的很好吃。", py:"(Chéngdū de huǒguō zhēnde hěn hǎo chī.)", th:"ฮอทพอตเฉิงตูอร่อยจริงๆ" }
+    ]
+  },
+  {
+    month:1, word:"厕所", py:"( cè suǒ )", mean:"ห้องน้ำ / ห้องส้วม",
+    blob:"#B8A9D9", emoji:"🚻", badge:"🚨 survival",
+    radicals:[
+      { hl:"厕", hc:"ho", py:"cè", mn:"ส้วม",
+        dt:"厂(ผนัง/หน้าผา) + 则(ด้านข้าง) → ห้องที่ซ่อนอยู่ด้านข้างอาคาร",
+        sb:"สมัยโบราณห้องน้ำสร้างไว้ข้างๆ บ้าน ไม่ได้อยู่ข้างใน!" },
+      { hl:"所", hc:"hg", py:"suǒ", mn:"สถานที่",
+        dt:"户(บ้าน) + 斤(ขวาน เสียง) → สถานที่, ที่อยู่",
+        sb:"所 พบบ่อยในชื่อสถานที่: 诊所(คลินิก) 派出所(สถานีตำรวจ) 研究所(สถาบันวิจัย)" }
+    ],
+    trick:"厕所 = 'ห้องข้าง + สถานที่' → ที่ที่ซ่อนอยู่ข้างๆ = ห้องน้ำ! 😂 จำไว้ก่อนเลย อันนี้สำคัญมาก",
+    extra:"ป้าย: 男(nán)=ชาย 🚹 / 女(nǚ)=หญิง 🚺 / 男女(nán nǚ)=รวม / 残疾人(cán jí rén)=ผู้พิการ ♿",
+    examples:[
+      { zh:"请问，厕所在哪里？", py:"(Qǐngwèn, cèsuǒ zài nǎlǐ?)", th:"ขอถามว่าห้องน้ำอยู่ที่ไหนคะ?" },
+      { zh:"厕所在那边。", py:"(Cèsuǒ zài nàbiān.)", th:"ห้องน้ำอยู่ทางนั้น" }
+    ]
+  },
+
+  // ===== MONTH DIVIDER 2 =====
+  { type:"divider", month:2, topics:["ฮอทพอต / อาหาร Sichuan","ไม่เอาเผ็ด (สำคัญมาก!)","เผ็ดซ่า = signature เฉิงตู","แพนด้า / รถไฟใต้ดิน / สแกน QR"] },
+
+  // ===== MONTH 2 =====
+  {
+    month:2, word:"不要辣", py:"( bù yào là )", mean:"ไม่เอาเผ็ด 🙅",
+    blob:"#FF7D7D", emoji:"🌶️", badge:"🚨 Chengdu survival",
+    radicals:[
+      { hl:"不", hc:"ho", py:"bù", mn:"ไม่",
+        dt:"เดิมคือรูปนกที่บินขึ้นไปแต่ลงไม่ได้ → 'ขึ้นแต่ลงไม่ได้' = ไม่ได้",
+        sb:"เสียงผันตาม tone ที่ตามมา: 不(bù)+4th tone → เป็น bú เช่น 不是(búshì)" },
+      { hl:"辣", hc:"hg", py:"là", mn:"เผ็ด",
+        dt:"辛(เผ็ดร้อน/ความทุกข์) + 束(มัด) → ถูกมัดด้วยความเผ็ด = ปากแสบแสบ!",
+        sb:"辛 เดิมแปลว่าโทษทัณฑ์ → ความเจ็บปวด → ขยายมาหมายถึงรสเผ็ด" }
+    ],
+    trick:"不要辣 = 'ไม่ + ต้องการ + เผ็ด' → ตรงๆ เลย! ที่เฉิงตูต้องพูดก่อนสั่งอาหารทุกครั้ง เพราะ default = เผ็ดมาก 🔥🔥🔥",
+    extra:"Scale เผ็ด: 不要辣(ไม่เผ็ด) → 微辣(wēilà เผ็ดน้อย) → 中辣(zhōnglà กลาง) → 特辣(tèlà เผ็ดมาก)",
+    examples:[
+      { zh:"我不要辣，谢谢！", py:"(Wǒ bù yào là, xièxie!)", th:"ไม่เอาเผ็ดนะคะ ขอบคุณ!" },
+      { zh:"可以不要辣吗？我是泰国人，但我怕辣。", py:"(Kěyǐ bù yào là ma? Wǒ shì Tàiguó rén, dàn wǒ pà là.)", th:"ไม่ใส่เผ็ดได้ไหม? ฉันเป็นคนไทยแต่กลัวเผ็ดอ่ะ 😂" }
+    ]
+  },
+  {
+    month:2, word:"麻辣", py:"( má là )", mean:"เผ็ดซ่า (Sichuan signature)",
+    blob:"#FF6B35", emoji:"🫕", badge:"อาหาร • Sichuan",
+    radicals:[
+      { hl:"麻", hc:"ho", py:"má", mn:"ชา / ซ่า",
+        dt:"林(ต้นไม้) + 广(หลังคา) → ต้นกัญชงที่ปลูกในร่ม → เส้นใยพันกัน → ความรู้สึกซ่าชา",
+        sb:"麻 ยังแปลว่า งา(芝麻 zhīma) และ 'ยุ่ง/วุ่นวาย' เช่น 麻烦(máfan)=ยุ่งยาก" },
+      { hl:"辣", hc:"hg", py:"là", mn:"เผ็ด",
+        dt:"(เหมือน 不要辣) 辛 + 束 → ถูกมัดด้วยความเผ็ด",
+        sb:"ที่เฉิงตู 辣 คือ lifestyle ไม่ใช่แค่รสชาติ 😂" }
+    ],
+    trick:"麻辣 = 'ชา🫥 + เผ็ด🌶️' → ปากชาก่อน แล้วค่อยเผ็ดตาม = texture รสชาติ Sichuan แบบ signature! ถ้าชอบพูดว่า 好麻辣！= เผ็ดซ่าสุดๆ!",
+    extra:"เมนู Sichuan ดังๆ: 麻辣火锅(ฮอทพอต) 麻辣烫(mátàng ลวกเผ็ด) 麻婆豆腐(เต้าหู้เผ็ด) 口水鸡(ไก่เผ็ด)",
+    examples:[
+      { zh:"我喜欢麻辣味！", py:"(Wǒ xǐhuān málà wèi!)", th:"ฉันชอบรสเผ็ดซ่า!" },
+      { zh:"成都的麻辣火锅是全国最有名的。", py:"(Chéngdū de málà huǒguō shì quánguó zuì yǒumíng de.)", th:"ฮอทพอตเผ็ดซ่าของเฉิงตูโด่งดังที่สุดในประเทศ" }
+    ]
+  },
+  {
+    month:2, word:"熊猫", py:"( xióng māo )", mean:"หมีแพนด้า",
+    blob:"#7ECFC0", emoji:"🐼", badge:"สัตว์ • เฉิงตู",
+    radicals:[
+      { hl:"熊", hc:"ho", py:"xióng", mn:"หมี",
+        dt:"เดิมเป็นรูปสัตว์ขนาดใหญ่ที่มีรอยเท้า → ใช้แทน 'สัตว์ใหญ่น่ากลัว'",
+        sb:"💡 熊 ยังใช้แปลว่า 'ขี้ขลาด' ในภาษาปาก เช่น 你真熊!(นายขี้ขลาดจริง!) 😂" },
+      { hl:"猫", hc:"hg", py:"māo", mn:"แมว",
+        dt:"犭(สัตว์) + 苗(เสียง māo) → สัตว์ที่ร้องเหมือน 'เหมียว'",
+        sb:"สัตว์ส่วนใหญ่มี radical 犭 ทางซ้าย: 狗(หมา) 猪(หมู) 狼(หมาป่า) 猫(แมว)" }
+    ],
+    trick:"熊猫 = 'หมี🐻 + แมว🐱' → คนจีนสมัยก่อนเห็นแพนด้าครั้งแรก นึกว่าคือหมีที่หน้าตาคล้ายแมว ดำขาวแปลกดี!",
+    extra:"สถานที่ต้องไป: 成都大熊猫繁育研究基地 (Chéngdū Dà Xióngmāo Fányù Yánjiū Jīdì) = ฐานเพาะพันธุ์แพนด้าเฉิงตู 🐼",
+    examples:[
+      { zh:"成都有很多熊猫。", py:"(Chéngdū yǒu hěn duō xióngmāo.)", th:"เฉิงตูมีแพนด้าเยอะมาก" },
+      { zh:"我想和熊猫照相！可以吗？", py:"(Wǒ xiǎng hé xióngmāo zhào xiàng! Kěyǐ ma?)", th:"ฉันอยากถ่ายรูปกับแพนด้า! ได้ไหมคะ?" }
+    ]
+  },
+  {
+    month:2, word:"火锅", py:"( huǒ guō )", mean:"หม้อไฟ / ฮอทพอต",
+    blob:"#FF8C69", emoji:"🍲", badge:"อาหาร • เฉิงตู",
+    radicals:[
+      { hl:"火", hc:"ho", py:"huǒ", mn:"ไฟ",
+        dt:"มาจากรูปเปลวไฟโบราณ 🔥 → ᗑ → 火",
+        sb:"火 พบบ่อย: 烤(เผา/ย่าง) 炒(ผัด) 炸(ทอด) 燃(ติดไฟ) → เกี่ยวกับความร้อนทั้งนั้น" },
+      { hl:"锅", hc:"hg", py:"guō", mn:"หม้อ",
+        dt:"钅(โลหะ) + 咼(เสียง guō) → หม้อที่ทำจากโลหะ",
+        sb:"เครื่องครัวโลหะมักมี 钅: 锅(หม้อ) 铲(พลั่ว) 盘(จาน) 碗(ชาม)" }
+    ],
+    trick:"火锅 = 'ไฟ🔥 + หม้อ🍳' → หม้อที่ตั้งบนไฟ = ฮอทพอต! จำง่ายสุดในโลก คนจีนออกแบบภาษาตรงๆ มากเลย 😂",
+    extra:"สั่งฮอทพอตที่เฉิงตู: 鸳鸯锅(yuānyāng guō) = หม้อครึ่งแดงครึ่งขาว (เผ็ด+ไม่เผ็ด) 🔴⚪",
+    examples:[
+      { zh:"我们去吃火锅吧！", py:"(Wǒmen qù chī huǒguō ba!)", th:"ไปกินฮอทพอตกันเถอะ!" },
+      { zh:"请给我鸳鸯锅，左边不要辣。", py:"(Qǐng gěi wǒ yuānyāng guō, zuǒbiān bù yào là.)", th:"ขอหม้อสองสี ฝั่งซ้ายไม่เผ็ดนะคะ" }
+    ]
+  },
+  {
+    month:2, word:"地铁", py:"( dì tiě )", mean:"รถไฟใต้ดิน (MRT)",
+    blob:"#7BC47F", emoji:"🚇", badge:"การเดินทาง",
+    radicals:[
+      { hl:"地", hc:"ho", py:"dì", mn:"พื้นดิน / โลก",
+        dt:"土(ดิน) + 也(เสียง) → ผืนดิน พื้นที่",
+        sb:"土 = ดิน → ของที่เกี่ยวกับดิน: 城(เมือง) 块(ก้อนดิน/หน่วยเงิน) 坐(นั่ง=นั่งลงกับดิน)" },
+      { hl:"铁", hc:"hb", py:"tiě", mn:"เหล็ก",
+        dt:"钅(โลหะ) + เสียง → โลหะที่แข็งแกร่ง = เหล็ก",
+        sb:"铁 ยังใช้แปลว่า 'แน่นอน/เด็ดขาด' เช่น 铁定(tiě dìng) = แน่นอนที่สุด!" }
+    ],
+    trick:"地铁 = 'ดิน🌍 + เหล็ก🔩' → รางเหล็กใต้ดิน = รถไฟใต้ดิน! อ่านปุ๊บ แปลได้ปั๊บ",
+    extra:"App ที่ต้องโหลดก่อนไป: 成都地铁 (Chengdu Metro App) หรือ Google Maps ก็ใช้ได้ในเฉิงตู!",
+    examples:[
+      { zh:"坐地铁去熊猫基地要多久？", py:"(Zuò dìtiě qù xióngmāo jīdì yào duōjiǔ?)", th:"นั่ง MRT ไปฐานแพนด้าใช้เวลานานแค่ไหน?" },
+      { zh:"请问地铁站在哪里？", py:"(Qǐngwèn dìtiě zhàn zài nǎlǐ?)", th:"ขอถามว่าสถานี MRT อยู่ที่ไหนคะ?" }
+    ]
+  },
+  {
+    month:2, word:"扫码", py:"( sǎo mǎ )", mean:"สแกน QR Code",
+    blob:"#A78BD4", emoji:"📱", badge:"จ่ายเงิน • ดิจิทัล",
+    radicals:[
+      { hl:"扫", hc:"ho", py:"sǎo", mn:"กวาด / สแกน",
+        dt:"扌(มือ) + 帚(ไม้กวาด) → มือถือไม้กวาด → กวาด → สแกน",
+        sb:"扌= 手 ย่อ = มือ → การกระทำด้วยมือมักมี radical นี้: 打(ตี) 拿(หยิบ) 找(หา)" },
+      { hl:"码", hc:"hg", py:"mǎ", mn:"รหัส / code",
+        dt:"石(หิน) + 马(ม้า เสียง) → สมัยก่อนใช้หินนับของ → รหัสตัวเลข",
+        sb:"码 พบบ่อย: 密码(mìmǎ)=รหัสผ่าน 邮码(yóumǎ)=รหัสไปรษณีย์ 二维码(QR Code)" }
+    ],
+    trick:"扫码 = 'กวาด🧹 + รหัส' → กวาดกล้องผ่านรหัส = สแกน QR! ที่จีนทุกอย่างจ่ายด้วยวิธีนี้ ต้องเตรียม WeChat/Alipay ก่อนไป 📱",
+    extra:"ก่อนไปเฉิงตู: โหลด WeChat → เติมเงิน WeChat Pay → พร้อมสแกนทุกที่! ร้านค้าส่วนใหญ่ไม่รับบัตรเครดิต",
+    examples:[
+      { zh:"请扫码付款。", py:"(Qǐng sǎomǎ fùkuǎn.)", th:"กรุณาสแกน QR จ่ายเงินด้วยค่ะ" },
+      { zh:"我可以扫码吗？", py:"(Wǒ kěyǐ sǎomǎ ma?)", th:"สแกน QR ได้ไหมคะ?" }
+    ]
+  }
+];
+
+// ===================================================
+let idx = 0;
+const contentCards = cards; // all including dividers
+
+function getMonthInfo(m){ return MONTHS[m] || {label:'—', color:'#888', icon:'📚'} }
+
+function updateHeader(m){
+  const info = getMonthInfo(m);
+  const mb = document.getElementById('mbadge');
+  mb.textContent = info.icon + ' ' + info.label;
+  mb.style.background = info.color;
+}
+
+function updateProgress(){
+  const total = contentCards.length;
+  const pct = Math.round(((idx+1)/total)*100);
+  document.getElementById('pbar').style.width = pct+'%';
+  document.getElementById('ptext').textContent = `${idx+1} / ${total}  (${pct}%)`;
+}
+
+function renderDivider(c){
+  const info = getMonthInfo(c.month);
+  const topicsHTML = c.topics.map(t=>`<div>• ${t}</div>`).join('');
+  document.getElementById('card').innerHTML = `
+    <div class="month-divider">
+      <div class="month-num">${info.icon}</div>
+      <div class="month-th">${info.label}</div>
+      <div class="month-en">เดือนที่ ${c.month} ของ 5-month plan</div>
+      <div class="month-topics"><b>คำที่จะเรียนเดือนนี้:</b><br>${topicsHTML}</div>
+    </div>`;
+  updateHeader(c.month);
+}
+
+function renderCard(c){
+  const radicalsHTML = c.radicals.map(r=>`
+    <div class="rad-row"><div>
+      <span class="hl ${r.hc}">${r.hl}</span>
+      <span style="font-size:12.5px;color:#777">(${r.py})</span>
+      = ${r.mn} <span style="color:#777">→</span>
+      <span style="font-size:13.5px">${r.dt}</span>
+      ${r.sb?`<span class="sub">${r.sb}</span>`:''}
+    </div></div>`).join('');
+
+  const exHTML = c.examples.map(e=>`
+    <div class="ex-item">
+      <span class="zh-s">${e.zh}</span>
+      <span class="py-s">${e.py}</span>
+      <span class="th-s">= ${e.th}</span>
+    </div>`).join('');
+
+  document.getElementById('card').innerHTML = `
+    <div class="card-top">
+      <div class="word-section">
+        <div><span class="cat-badge">${c.badge}</span></div>
+        <div class="blob-wrap" style="--bc:${c.blob}">
+          <div class="zh-main">${c.word}</div>
+        </div>
+        <div class="py-main">${c.py}</div>
+        <div class="th-main">${c.mean}</div>
+      </div>
+      <div class="emoji-box">${c.emoji}</div>
+    </div>
+    <hr>
+    <div class="sec-label">รากศัพท์ :</div>
+    ${radicalsHTML}
+    <div class="trick"><span class="tl">TRICK 💡 </span>${c.trick}</div>
+    ${c.extra?`<div class="extra">${c.extra}</div>`:''}
+    <div class="sec-label">Example :</div>
+    ${exHTML}`;
+
+  updateHeader(c.month);
+}
+
+function render(){
+  const c = contentCards[idx];
+  if(c.type==='divider') renderDivider(c);
+  else renderCard(c);
+  updateProgress();
+  document.getElementById('prev').disabled = idx===0;
+  document.getElementById('next').disabled = idx===contentCards.length-1;
+}
+
+function go(d){
+  idx = Math.max(0, Math.min(contentCards.length-1, idx+d));
+  render();
+}
+
+render();
+</script>
+</body>
+</html>

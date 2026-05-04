@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>🐼 Chengdu Cards — Batch 2</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;700;900&family=Noto+Sans+SC:wght@400;700;900&family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:#ddd6c8;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Caveat','Noto Sans Thai',sans-serif;padding:16px}
+    .app-header{text-align:center;margin-bottom:10px}
+    .app-title{font-size:22px;color:#444;font-family:'Caveat',sans-serif}
+    .month-badge{display:inline-block;padding:3px 16px;border-radius:20px;font-size:13px;font-family:'Noto Sans Thai',sans-serif;margin-top:4px;color:#fff}
+
+    .prog-wrap{width:100%;max-width:460px;margin-bottom:12px}
+    .prog-bar-bg{background:#c5bdb2;border-radius:20px;height:8px;width:100%;overflow:hidden}
+    .prog-bar-fill{background:#555;border-radius:20px;height:8px;transition:width 0.35s ease}
+    .prog-text{text-align:center;font-size:13px;color:#666;margin-top:4px;font-family:'Noto Sans Thai',sans-serif}
+
+    .card{background:#f5f0e6;border-radius:28px;padding:24px 20px 20px;box-shadow:5px 8px 24px rgba(0,0,0,.15);width:100%;max-width:460px;min-height:540px;position:relative}
+
+    .card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
+    .word-section{flex:1;text-align:center}
+    .cat-badge{display:inline-block;background:#444;color:#f5f0e6;font-size:11px;padding:2px 12px;border-radius:20px;margin-bottom:6px;font-family:'Noto Sans Thai',sans-serif}
+    .blob-wrap{position:relative;display:inline-block;padding:6px 16px 10px;margin-bottom:2px}
+    .blob-wrap::before{content:'';position:absolute;inset:0;background:var(--bc,#7ECFC0);border-radius:58% 62% 55% 68%/60% 55% 65% 58%;z-index:0}
+    .zh-main{font-family:'Noto Sans SC',sans-serif;font-size:54px;font-weight:900;color:#1a1a1a;position:relative;z-index:1;line-height:1.05;letter-spacing:4px}
+    .py-main{font-size:17px;color:#555;margin-top:4px;font-family:'Caveat',sans-serif;letter-spacing:1px}
+    .th-main{font-size:20px;font-weight:700;color:#222;margin-top:2px;font-family:'Noto Sans Thai',sans-serif}
+    .emoji-box{font-size:52px;line-height:1;padding-left:8px;padding-top:4px;flex-shrink:0}
+
+    hr{border:none;border-top:1.5px solid #ccc;margin:10px 0}
+    .sec-label{font-size:18px;font-weight:700;color:#1a1a1a;font-family:'Caveat',sans-serif;display:inline-block;border-bottom:2.5px wavy #888;padding-bottom:1px;margin-bottom:10px}
+
+    .rad-row{display:flex;align-items:flex-start;margin-bottom:9px;font-size:14.5px;line-height:1.55;color:#2a2a2a}
+    .rad-row::before{content:'– ';flex-shrink:0;margin-top:1px}
+    .hl{display:inline-block;padding:0 10px 1px;border-radius:50px;font-family:'Noto Sans SC',sans-serif;font-weight:700;font-size:18px;vertical-align:middle;margin-right:2px}
+    .ho{background:#FFD580}.hg{background:#A8E6C8}.hb{background:#B3D8FF}.hp{background:#FFB8C6}.hv{background:#D4B8FF}
+    .sub{display:block;margin-left:20px;font-size:13px;color:#666;line-height:1.4;margin-top:2px}
+    .sub::before{content:'↳ '}
+
+    .trick{background:#FFD580;border-radius:14px;padding:10px 14px;margin:10px 0 8px;font-size:14.5px;line-height:1.55;color:#1a1a1a}
+    .tl{font-weight:700;font-size:16px;font-family:'Caveat',sans-serif}
+
+    .extra{background:#e8f4fd;border-radius:12px;padding:8px 12px;margin-bottom:8px;font-size:13px;color:#2a5f8f;line-height:1.5}
+    .extra::before{content:'📌 '}
+
+    .pair-box{background:#f0ffe8;border-radius:12px;padding:8px 12px;margin-bottom:8px;font-size:13px;color:#2a6e2a;line-height:1.6;font-family:'Noto Sans Thai',sans-serif}
+    .pair-box::before{content:'🔗 คู่กับ: '}
+
+    .ex-item{margin-bottom:10px;font-size:14.5px;line-height:1.5}
+    .ex-item::before{content:'– '}
+    .zh-s{font-family:'Noto Sans SC',sans-serif;font-weight:700;font-size:16px;color:#1a1a1a}
+    .py-s{display:block;margin-left:12px;font-size:12px;color:#777}
+    .th-s{display:block;margin-left:12px;font-size:13.5px;color:#c0392b;font-family:'Noto Sans Thai',sans-serif}
+
+    .nav{display:flex;justify-content:space-between;align-items:center;margin-top:14px;width:100%;max-width:460px;gap:10px}
+    .nav-btn{background:#f5f0e6;border:2.5px solid #333;border-radius:50px;padding:9px 22px;font-size:17px;cursor:pointer;font-family:'Caveat',sans-serif;box-shadow:3px 3px 0 #333;transition:all .12s;color:#1a1a1a}
+    .nav-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:4px 5px 0 #333}
+    .nav-btn:active:not(:disabled){transform:translateY(1px);box-shadow:1px 2px 0 #333}
+    .nav-btn:disabled{opacity:.35;cursor:default}
+
+    .bottom-nav{display:flex;justify-content:center;gap:12px;margin-top:10px;width:100%;max-width:460px}
+    .home-btn{background:#1a1a1a;color:#f5f0e6;border:none;border-radius:50px;padding:8px 20px;font-size:15px;cursor:pointer;font-family:'Caveat',sans-serif;text-decoration:none;display:inline-block}
+
+    .hint{font-size:12px;color:#888;text-align:center;margin-top:8px;font-family:'Noto Sans Thai',sans-serif}
+
+    .month-divider{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:540px;text-align:center;gap:12px}
+    .month-icon{font-size:64px;line-height:1}
+    .month-th{font-size:22px;font-family:'Noto Sans Thai',sans-serif;font-weight:700;color:#1a1a1a}
+    .month-en{font-size:16px;color:#666;font-family:'Caveat',sans-serif}
+    .month-topics{background:rgba(0,0,0,.06);border-radius:14px;padding:12px 18px;font-size:14px;font-family:'Noto Sans Thai',sans-serif;color:#333;line-height:1.8;text-align:left;width:100%}
+    .recap-box{background:#6BBFAD;color:#fff;border-radius:12px;padding:10px 14px;font-size:13px;font-family:'Noto Sans Thai',sans-serif;line-height:1.6;width:100%}
+  </style>
+</head>
+<body>
+
+<div class="app-header">
+  <div class="app-title">🐼 Chengdu Cards</div>
+  <div id="mbadge" class="month-badge" style="background:#6BBFAD">🌱 เดือน 1 — พฤษภาคม (ต่อ)</div>
+</div>
+
+<div class="prog-wrap">
+  <div class="prog-bar-bg"><div class="prog-bar-fill" id="pbar"></div></div>
+  <div class="prog-text" id="ptext"></div>
+</div>
+
+<div class="card" id="card"></div>
+
+<div class="nav">
+  <button class="nav-btn" id="prev" onclick="go(-1)">← ก่อน</button>
+  <button class="nav-btn" id="next" onclick="go(1)">ถัดไป →</button>
+</div>
+<div class="bottom-nav">
+  <a href="index.html" class="home-btn">🏠 กลับหน้าหลัก</a>
+</div>
+<p class="hint">Batch 2 · 14 cards · เดือน 1 ต่อ (พ.ค.) · Session 2</p>
+
+<script>
+const cards = [
+  // DIVIDER
+  {
+    type:"divider",
+    topics:["ตอบรับ / ปฏิเสธสุภาพ","ขอความช่วยเหลือ","บอกที่มาของตัวเอง","ถามเวลาและทิศทาง","ตัวเลขพื้นฐาน"],
+    recap:"✅ Batch 1 เรียนไปแล้ว: 你好 谢谢 对不起 多少钱 好吃 厕所 不要辣 麻辣 熊猫 火锅 地铁 扫码"
+  },
+
+  // 1
+  {
+    word:"没关系", py:"( méi  guān xi )", mean:"ไม่เป็นไร / No problem",
+    blob:"#98D8A0", emoji:"😌", badge:"礼貌 มารยาท",
+    radicals:[
+      { hl:"没", hc:"ho", py:"méi", mn:"ไม่มี / ไม่ได้",
+        dt:"氵(น้ำ) + 殳(เสียง) → น้ำที่ไหลหายไปจนไม่เหลือ = ไม่มี",
+        sb:"没 ใช้ 2 แบบ: 没有(ไม่มี) และ 没+กริยา = ยังไม่ได้ทำ เช่น 没吃(ยังไม่ได้กิน)" },
+      { hl:"关系", hc:"hg", py:"guān xi", mn:"ความสัมพันธ์",
+        dt:"关=ปิด/เชื่อม + 系=ผูก → ผูกพันเชื่อมกัน = ความสัมพันธ์",
+        sb:"没关系 = ไม่มีความสัมพันธ์(กับเรื่องนั้น) → ไม่เป็นไร!" }
+    ],
+    trick:"没关系 = 'ไม่มี + ความสัมพันธ์' → เรื่องนั้นไม่เกี่ยวกับฉัน = ไม่เป็นไร! 😌 ใช้ตอบ 对不起 เสมอ",
+    pair:"对不起 (ขอโทษ) → 没关系 (ไม่เป็นไร) ✅ คู่คลาสสิกที่ต้องจำคู่กัน",
+    examples:[
+      { zh:"对不起！— 没关系，没事的。", py:"(Duìbuqǐ! — Méi guānxi, méi shì de.)", th:"ขอโทษ! — ไม่เป็นไร ไม่มีอะไรหรอก" },
+      { zh:"你帮了我很多，没关系吗？", py:"(Nǐ bāng le wǒ hěn duō, méi guānxi ma?)", th:"คุณช่วยฉันเยอะมาก ไม่เป็นไรนะคะ?" }
+    ]
+  },
+
+  // 2
+  {
+    word:"请", py:"( qǐng )", mean:"กรุณา / ขอ / เชิญ",
+    blob:"#FFD580", emoji:"🙏", badge:"礼貌 มารยาท",
+    radicals:[
+      { hl:"请", hc:"ho", py:"qǐng", mn:"กรุณา / เชิญ",
+        dt:"讠(พูด) + 青(สีเขียวสด เสียง qīng) → พูดด้วยน้ำเสียงสดใส/สุภาพ = กรุณา",
+        sb:"讠= 言 ย่อ = การพูด → 请 เป็นคำพูดที่สุภาพที่สุด ใช้นำหน้าคำขอทุกประเภท" }
+    ],
+    trick:"请 มี radical 讠(พูด) → ใช้ทุกครั้งที่พูดขอร้องสุภาพๆ เหมือน 'Please' ในภาษาอังกฤษ! ใส่ไว้หน้าประโยคได้เลย",
+    extra:"请 ใช้ได้หลายแบบ: 请坐(นั่งได้เลย) 请进(เข้ามาได้เลย) 请问(ขอถาม) 请等一下(รอแป๊บนึงนะ)",
+    examples:[
+      { zh:"请给我一杯水。", py:"(Qǐng gěi wǒ yī bēi shuǐ.)", th:"กรุณาเอาน้ำมาให้ฉันแก้วหนึ่งค่ะ" },
+      { zh:"请慢走！", py:"(Qǐng màn zǒu!)", th:"ค่อยๆ เดินนะคะ! (คำลาแขก = เชิญกลับได้นะ)" }
+    ]
+  },
+
+  // 3
+  {
+    word:"再见", py:"( zài jiàn )", mean:"ลาก่อน / แล้วเจอกัน",
+    blob:"#FFB347", emoji:"👋", badge:"ทักทาย",
+    radicals:[
+      { hl:"再", hc:"ho", py:"zài", mn:"อีกครั้ง",
+        dt:"เดิมมาจากรูปปลาที่กลับมา → สิ่งที่เกิดขึ้นซ้ำ = อีกครั้ง",
+        sb:"再 ใช้บ่อยมาก: 再来一碗(ขออีกชาม) 再说一次(พูดอีกที) 再见(แล้วเจอกัน)" },
+      { hl:"见", hc:"hg", py:"jiàn", mn:"เห็น / พบ",
+        dt:"เดิมคือรูปตาที่มองอยู่ 👁 → การมองเห็น = พบเจอ",
+        sb:"见 พบบ่อย: 见面(พบหน้า) 见到(พบเจอ) 意见(ความเห็น)" }
+    ],
+    trick:"再见 = 'อีกครั้ง + เห็น' → แล้วเจอกันใหม่อีกครั้ง! 👋 ใช้แทน Goodbye ได้ทุกสถานการณ์",
+    extra:"ลาแบบอื่น: 拜拜(bái bái = bye bye) 回头见(huí tóu jiàn = แล้วเจอกัน แบบ casual) 保重(bǎozhòng = ดูแลตัวด้วยนะ)",
+    examples:[
+      { zh:"谢谢你！再见！", py:"(Xièxie nǐ! Zàijiàn!)", th:"ขอบคุณมากนะคะ! ลาก่อน!" },
+      { zh:"明天见！", py:"(Míngtiān jiàn!)", th:"แล้วเจอกันพรุ่งนี้!" }
+    ]
+  },
+
+  // 4
+  {
+    word:"请问", py:"( qǐng wèn )", mean:"ขอถามว่า / Excuse me (ก่อนถาม)",
+    blob:"#B3D8FF", emoji:"🙋", badge:"สื่อสาร • ใช้บ่อยสุด",
+    radicals:[
+      { hl:"请", hc:"ho", py:"qǐng", mn:"กรุณา",
+        dt:"(เหมือน card ก่อน) 讠+青 → พูดสุภาพ",
+        sb:"ใส่ 请 นำหน้า 问 → ขอถามอย่างสุภาพ" },
+      { hl:"问", hc:"hg", py:"wèn", mn:"ถาม",
+        dt:"口(ปาก) + 门(ประตู) → ปากที่เคาะประตูเพื่อถาม",
+        sb:"口=ปาก + 门=ประตู → เหมือนเดินไปเคาะประตูบ้านใครเพื่อถามทาง 🚪" }
+    ],
+    trick:"请问 = 'กรุณา + ถาม' → ขอถามหน่อยนะ! เหมือน 'Excuse me' ภาษาอังกฤษ ใช้นำหน้าทุกครั้งก่อนถามทาง ถามราคา หรือถามอะไรก็ตาม",
+    extra:"ใช้ได้กับทุกประโยคคำถาม: 请问+[คำถาม] → สุภาพขึ้นทันที!\n请问厕所在哪里？/ 请问多少钱？/ 请问怎么去...？",
+    examples:[
+      { zh:"请问，附近有便利店吗？", py:"(Qǐngwèn, fùjìn yǒu biànlìdiàn ma?)", th:"ขอถามว่า แถวนี้มีร้านสะดวกซื้อไหมครับ?" },
+      { zh:"请问，去武侯祠怎么走？", py:"(Qǐngwèn, qù Wǔhóu Cí zěnme zǒu?)", th:"ขอถามว่า ไปวัดอู่โหวยังไงครับ?" }
+    ]
+  },
+
+  // 5
+  {
+    word:"听不懂", py:"( tīng bù dǒng )", mean:"ฟังแล้วไม่เข้าใจ",
+    blob:"#FFB8C6", emoji:"😵", badge:"สื่อสาร • survival",
+    radicals:[
+      { hl:"听", hc:"ho", py:"tīng", mn:"ฟัง",
+        dt:"口(ปาก) + 斤(ขวาน เสียง) → ฟังอย่างตั้งใจเหมือนโดนขวานฟัน!",
+        sb:"听 ยังใช้ใน: 好听(ไพเราะ) 听说(ได้ยินว่า) 听音乐(ฟังเพลง)" },
+      { hl:"懂", hc:"hg", py:"dǒng", mn:"เข้าใจ",
+        dt:"忄(ใจ) + 童(เด็ก เสียง) → ใจที่รับรู้ได้ = เข้าใจ",
+        sb:"คู่กับ: 看懂(อ่านแล้วเข้าใจ) 听懂(ฟังแล้วเข้าใจ) 说懂(พูดให้เข้าใจ)" }
+    ],
+    trick:"听不懂 = 'ฟัง + ไม่ + เข้าใจ' → ฟังแล้วแต่ยังไม่เข้าใจ! 😵 พูดประโยคนี้ได้เลยเวลาจีนพูดเร็วเกินไป คนจีนจะช่วยพูดช้าลงให้",
+    pair:"听不懂(ไม่เข้าใจ) ↔ 听懂了(เข้าใจแล้ว!) · 看不懂(อ่านไม่ออก) ↔ 看懂了(อ่านออกแล้ว!)",
+    examples:[
+      { zh:"对不起，我听不懂，你能说慢一点吗？", py:"(Duìbuqǐ, wǒ tīng bù dǒng, nǐ néng shuō màn yīdiǎn ma?)", th:"ขอโทษ ฉันไม่เข้าใจ พูดช้าลงหน่อยได้ไหมครับ?" },
+      { zh:"我的中文不好，我听不懂。", py:"(Wǒ de Zhōngwén bù hǎo, wǒ tīng bù dǒng.)", th:"ภาษาจีนของฉันไม่ดี ฉันฟังไม่เข้าใจ" }
+    ]
+  },
+
+  // 6
+  {
+    word:"再说一次", py:"( zài shuō yī cì )", mean:"พูดอีกครั้งได้ไหม?",
+    blob:"#D4B8FF", emoji:"🔁", badge:"สื่อสาร • survival",
+    radicals:[
+      { hl:"再", hc:"ho", py:"zài", mn:"อีกครั้ง",
+        dt:"(เหมือน 再见) → สิ่งที่เกิดซ้ำ",
+        sb:"再 = อีก → ใช้ขอให้ทำซ้ำได้เลย" },
+      { hl:"说", hc:"hg", py:"shuō", mn:"พูด",
+        dt:"讠(พูด) + 兑(แลกเปลี่ยน) → พูดเพื่อแลกเปลี่ยนความคิด",
+        sb:"说 พบบ่อย: 说话(พูดคุย) 说中文(พูดจีน) 听说(ได้ยินว่า)" },
+      { hl:"一次", hc:"hb", py:"yī cì", mn:"หนึ่งครั้ง",
+        dt:"一=หนึ่ง + 次=ครั้ง → หนึ่งครั้ง",
+        sb:"次 ใช้นับครั้ง: 两次(สองครั้ง) 几次(กี่ครั้ง) 每次(ทุกครั้ง)" }
+    ],
+    trick:"再说一次 = 'อีก + พูด + หนึ่งครั้ง' → ช่วยพูดอีกครั้งได้ไหม! 🔁 ท่อง 3 คำนี้ไว้ใช้งานได้ทันทีที่ไม่เข้าใจ",
+    extra:"ใช้คู่กับ: 慢一点(màn yīdiǎn = ช้าลงหน่อย) เช่น 请再说一次，慢一点！= พูดอีกทีช้าๆ ได้ไหมครับ?",
+    examples:[
+      { zh:"请再说一次，好吗？", py:"(Qǐng zài shuō yīcì, hǎo ma?)", th:"ช่วยพูดอีกครั้งได้ไหมครับ?" },
+      { zh:"对不起，请再说一次，慢一点。", py:"(Duìbuqǐ, qǐng zài shuō yīcì, màn yīdiǎn.)", th:"ขอโทษ ช่วยพูดอีกทีช้าๆ หน่อยได้ไหมครับ?" }
+    ]
+  },
+
+  // 7
+  {
+    word:"帮帮我", py:"( bāng bāng wǒ )", mean:"ช่วยด้วย! / Help me!",
+    blob:"#FF8FAB", emoji:"🆘", badge:"🚨 ฉุกเฉิน",
+    radicals:[
+      { hl:"帮", hc:"ho", py:"bāng", mn:"ช่วย / สนับสนุน",
+        dt:"邦(รัฐ/กลุ่ม) + 巾(ผ้า) → กลุ่มคนที่ผูกพันกันช่วยเหลือกัน",
+        sb:"帮 ยังใช้ใน: 帮助(bāngzhù = ช่วยเหลือ) 帮忙(bāngmáng = ช่วยงาน)" }
+    ],
+    trick:"帮帮我 พูดซ้ำ 2 ครั้ง! 🆘 เหมือนตะโกน 'ช่วย! ช่วย!' → ยิ่งพูดซ้ำ ยิ่งเร่งด่วน! ในภาษาจีนการซ้ำคำแสดงความเข้มข้น",
+    pair:"帮帮我(ช่วยด้วย!) · 帮我一下(bāng wǒ yīxià = ช่วยหน่อยได้ไหม - สุภาพกว่า)",
+    examples:[
+      { zh:"帮帮我！我迷路了！", py:"(Bāngbāng wǒ! Wǒ mí lù le!)", th:"ช่วยด้วย! ฉันหลงทางแล้ว!" },
+      { zh:"请帮帮我，我的护照丢了。", py:"(Qǐng bāngbāng wǒ, wǒ de hùzhào diū le.)", th:"ช่วยด้วยนะคะ พาสปอร์ตของฉันหายไป" }
+    ]
+  },
+
+  // 8
+  {
+    word:"在哪里", py:"( zài  nǎ lǐ )", mean:"อยู่ที่ไหน? / Where is...?",
+    blob:"#7ECFC0", emoji:"📍", badge:"นำทาง • ใช้บ่อย",
+    radicals:[
+      { hl:"在", hc:"ho", py:"zài", mn:"อยู่ที่ / ณ",
+        dt:"土(ดิน) + 才(เสียง) → อยู่บนพื้นดิน = ณ ที่นั้น",
+        sb:"在 ใช้บอกตำแหน่ง: 在这里(อยู่ที่นี่) 在那里(อยู่ที่นั่น) 在家(อยู่บ้าน)" },
+      { hl:"哪", hc:"hg", py:"nǎ", mn:"ที่ไหน",
+        dt:"口(ปาก) + 那(ที่นั่น) → ปากถามว่าที่ไหน",
+        sb:"哪 ใช้ถาม: 哪里=ที่ไหน 哪个=อันไหน 哪天=วันไหน" },
+      { hl:"里", hc:"hb", py:"lǐ", mn:"ใน / ข้างใน",
+        dt:"土(ดิน) + 里(ระยะทาง) → พื้นที่ข้างใน",
+        sb:"里 ยังแปลว่า 'ข้างใน' เช่น 屋里(ในห้อง) 里面(ข้างใน)" }
+    ],
+    trick:"[สิ่งที่หา] + 在哪里？ → Template ถามหาทุกอย่าง! 📍 เช่น 厕所在哪里？ / 地铁站在哪里？ / 医院在哪里？",
+    examples:[
+      { zh:"请问，厕所在哪里？", py:"(Qǐngwèn, cèsuǒ zài nǎlǐ?)", th:"ขอถามว่า ห้องน้ำอยู่ที่ไหนครับ?" },
+      { zh:"出口在哪里？我找不到。", py:"(Chūkǒu zài nǎlǐ? Wǒ zhǎo bù dào.)", th:"ทางออกอยู่ที่ไหนครับ? หาไม่เจอเลย" }
+    ]
+  },
+
+  // 9
+  {
+    word:"可以", py:"( kě yǐ )", mean:"ได้ / อนุญาต / โอเค",
+    blob:"#98D8A0", emoji:"✅", badge:"สื่อสาร • ใช้บ่อย",
+    radicals:[
+      { hl:"可", hc:"ho", py:"kě", mn:"ได้ / อาจจะ",
+        dt:"口(ปาก) + 丁(ตะปู เสียง) → ปากที่พูดยืนยันตรงๆ = ได้",
+        sb:"可 นำหน้าคำศัพท์ได้: 可爱(น่ารัก) 可能(อาจจะ) 可是(แต่)" },
+      { hl:"以", hc:"hg", py:"yǐ", mn:"ด้วย / โดย",
+        dt:"เดิมคือรูปคนที่กำสิ่งของ → ใช้โดยวิธีการนั้น",
+        sb:"以 ใช้บ่อยใน: 可以(ได้) 以前(ก่อนหน้า) 以后(หลังจากนั้น)" }
+    ],
+    trick:"可以 = ใช้คู่กันเสมอ = อนุญาต/ได้ 👍 คู่ตรงข้าม: 不可以(bù kěyǐ) = ไม่ได้/ห้าม! ใช้ถามขออนุญาตได้ทุกอย่าง [動作]+可以吗？",
+    extra:"Template: 我可以+[กริยา]+吗？= ฉัน[กริยา]ได้ไหม? เช่น 我可以拍照吗？(ถ่ายรูปได้ไหม?) 我可以试穿吗？(ลองใส่ได้ไหม?)",
+    examples:[
+      { zh:"可以！没问题！", py:"(Kěyǐ! Méi wèntí!)", th:"ได้เลย! ไม่มีปัญหา!" },
+      { zh:"请问，可以用英文吗？", py:"(Qǐngwèn, kěyǐ yòng Yīngwén ma?)", th:"ขอถามว่า ใช้ภาษาอังกฤษได้ไหมครับ?" }
+    ]
+  },
+
+  // 10
+  {
+    word:"没有", py:"( méi yǒu )", mean:"ไม่มี",
+    blob:"#FFB8C6", emoji:"❌", badge:"สื่อสาร",
+    radicals:[
+      { hl:"没", hc:"ho", py:"méi", mn:"ไม่มี",
+        dt:"(เหมือน 没关系) 氵+殳 → น้ำไหลหายไป = ไม่มี",
+        sb:"没 ก่อนกริยา = ยังไม่ได้: 没吃(ยังไม่ได้กิน) 没去(ยังไม่ได้ไป)" },
+      { hl:"有", hc:"hg", py:"yǒu", mn:"มี",
+        dt:"月(เนื้อ/เดือน) + 手(มือ) → มือที่จับเนื้อไว้ = มี(ของ)",
+        sb:"有 ใช้บ่อยมาก: 有没有(มีไหม?) 有意思(น่าสนใจ) 有名(มีชื่อเสียง)" }
+    ],
+    trick:"没有 = 'ไม่ + มี' → ไม่มี! 💡 จำง่ายที่สุด ใช้ปฏิเสธทุกอย่าง: 没有钱(ไม่มีเงิน) 没有时间(ไม่มีเวลา) 没有问题(ไม่มีปัญหา!)",
+    pair:"有(มี) ↔ 没有(ไม่มี) · 有没有...？= มีไหม? (ถามทั้งสองกรณีในครั้งเดียว!)",
+    examples:[
+      { zh:"你有英文菜单吗？— 没有，对不起。", py:"(Nǐ yǒu Yīngwén càidān ma? — Méiyǒu, duìbuqǐ.)", th:"มีเมนูภาษาอังกฤษไหม? — ไม่มีครับ ขอโทษ" },
+      { zh:"没有问题！", py:"(Méiyǒu wèntí!)", th:"ไม่มีปัญหา! (= No problem!)" }
+    ]
+  },
+
+  // 11
+  {
+    word:"一共", py:"( yī gòng )", mean:"ทั้งหมด / รวมแล้ว",
+    blob:"#FFD580", emoji:"🧮", badge:"จ่ายเงิน • ช้อปปิ้ง",
+    radicals:[
+      { hl:"一", hc:"ho", py:"yī", mn:"หนึ่ง",
+        dt:"เส้นตรงหนึ่งเส้น → ตัวเลข 1 ที่เรียบง่ายที่สุดในโลก",
+        sb:"一 อ่านเสียงต่างกันตาม tone ที่ตามมา: yī, yí, yì" },
+      { hl:"共", hc:"hg", py:"gòng", mn:"ร่วมกัน / ทั้งหมด",
+        dt:"廿(ยี่สิบ) + 廾(สองมือ) → สองมือรวมกัน = ร่วมกัน/ทั้งหมด",
+        sb:"共 ใช้ใน: 共同(ร่วมกัน) 公共(สาธารณะ) 共产(คอมมิวนิสต์)" }
+    ],
+    trick:"一共 = 'หนึ่ง + รวม' → รวมทั้งหมดเป็นหนึ่ง = ทั้งหมดเท่าไหร่! 🧮 คนขายจะพูดว่า 一共XX元 = รวมทั้งหมด XX หยวน",
+    examples:[
+      { zh:"一共多少钱？", py:"(Yīgòng duōshao qián?)", th:"รวมทั้งหมดเท่าไหร่ครับ?" },
+      { zh:"一共三十八块。", py:"(Yīgòng sānshíbā kuài.)", th:"รวมทั้งหมด 38 หยวนครับ" }
+    ]
+  },
+
+  // 12
+  {
+    word:"今天 / 明天", py:"( jīn tiān  /  míng tiān )", mean:"วันนี้ / พรุ่งนี้",
+    blob:"#B3D8FF", emoji:"📅", badge:"เวลา • พื้นฐาน",
+    radicals:[
+      { hl:"今", hc:"ho", py:"jīn", mn:"ตอนนี้ / วันนี้",
+        dt:"เดิมรูปคนปิดปากไว้ → ณ ขณะนี้ (ยังพูดอยู่) = ตอนนี้",
+        sb:"今 ใช้ใน: 今天(วันนี้) 今年(ปีนี้) 今晚(คืนนี้)" },
+      { hl:"明", hc:"hg", py:"míng", mn:"สว่าง / พรุ่งนี้",
+        dt:"日(อาทิตย์☀️) + 月(จันทร์🌙) → แสงจากดวงอาทิตย์และจันทร์รวมกัน = สว่างมาก = วันใหม่",
+        sb:"明 ยังแปลว่า: 明白(เข้าใจ) 明显(ชัดเจน) 聪明(ฉลาด)" },
+      { hl:"天", hc:"hb", py:"tiān", mn:"วัน / ท้องฟ้า",
+        dt:"大(ใหญ่) + 一(เส้นหนึ่ง/ท้องฟ้า) → สิ่งใหญ่โตที่อยู่เหนือ = ท้องฟ้า/วัน",
+        sb:"天 ใช้ใน: 天气(อากาศ) 今天(วันนี้) 每天(ทุกวัน) 几天(กี่วัน)" }
+    ],
+    trick:"明 = ☀️อาทิตย์ + 🌙จันทร์ → สว่างทั้งวันทั้งคืน → วันใหม่ = พรุ่งนี้! เป็น radical ที่สวยที่สุดในภาษาจีน ✨",
+    extra:"เวลาที่ต้องรู้: 昨天(zuótiān=เมื่อวาน) 今天(วันนี้) 明天(พรุ่งนี้) 后天(hòutiān=มะรืน)",
+    examples:[
+      { zh:"今天几月几号？", py:"(Jīntiān jǐ yuè jǐ hào?)", th:"วันนี้วันที่เท่าไหร่เดือนอะไรครับ?" },
+      { zh:"明天几点出发？", py:"(Míngtiān jǐ diǎn chūfā?)", th:"พรุ่งนี้ออกเดินทางกี่โมงครับ?" }
+    ]
+  },
+
+  // 13
+  {
+    word:"几点", py:"( jǐ diǎn )", mean:"กี่โมง? / What time?",
+    blob:"#FFB347", emoji:"🕐", badge:"เวลา • พื้นฐาน",
+    radicals:[
+      { hl:"几", hc:"ho", py:"jǐ", mn:"กี่ / เท่าไหร่ (น้อย)",
+        dt:"เดิมคือรูปโต๊ะเล็กๆ มีขา → นับได้ไม่มาก → กี่ / เท่าไหร่",
+        sb:"几 ถามตัวเลขน้อยๆ: 几个(กี่ชิ้น) 几点(กี่โมง) 几天(กี่วัน) 几岁(อายุกี่ขวบ)" },
+      { hl:"点", hc:"hg", py:"diǎn", mn:"โมง / จุด",
+        dt:"黑(ดำ) + 占(ครอบครอง) → จุดดำที่ชี้บอกเวลาบนนาฬิกา = โมง",
+        sb:"点 ใช้หลายแบบ: 几点(กี่โมง) 一点(หนึ่งโมง/นิดหน่อย) 点菜(สั่งอาหาร)" }
+    ],
+    trick:"几点 = 'กี่ + โมง' → ถามเวลา! 🕐 ตอบ: X点 เช่น 三点(สามโมง) / 三点半(สามโมงครึ่ง) / 三点十五分(สามโมงสิบห้า)",
+    extra:"บอกเวลา: X点(Xโมง) X点半(Xโมงครึ่ง) X点X分(Xโมงนาที X) · 上午(เช้า) 下午(บ่าย) 晚上(เย็น/กลางคืน)",
+    examples:[
+      { zh:"请问，现在几点？", py:"(Qǐngwèn, xiànzài jǐ diǎn?)", th:"ขอถามว่า ตอนนี้กี่โมงครับ?" },
+      { zh:"熊猫基地几点关门？", py:"(Xióngmāo jīdì jǐ diǎn guānmén?)", th:"ฐานแพนด้าปิดกี่โมงครับ?" }
+    ]
+  },
+
+  // 14
+  {
+    word:"我是泰国人", py:"( wǒ shì Tài guó rén )", mean:"ฉันเป็นคนไทย",
+    blob:"#A8E6C8", emoji:"🇹🇭", badge:"แนะนำตัว • survival",
+    radicals:[
+      { hl:"泰", hc:"ho", py:"Tài", mn:"ไทย / ยิ่งใหญ่/สงบ",
+        dt:"水(น้ำ) + 大(ใหญ่) + 手(มือ) → ยิ่งใหญ่และสงบเหมือนน้ำ",
+        sb:"คนจีนตั้งชื่อ 泰国 ให้ไทย → 泰=สงบสุข/ยิ่งใหญ่ → ไทยในสายตาจีนคือดินแดนอันสงบสุข 🙏" },
+      { hl:"国", hc:"hg", py:"guó", mn:"ประเทศ",
+        dt:"囗(กรอบ=ขอบเขต) + 玉(หยก/ของมีค่า) → ขอบเขตที่มีของมีค่า = ประเทศ",
+        sb:"国 ใช้ในชื่อประเทศทุกประเทศ: 中国(จีน) 美国(อเมริกา) 日本(ญี่ปุ่น ไม่มี国!)" },
+      { hl:"人", hc:"hb", py:"rén", mn:"คน",
+        dt:"เดิมคือรูปคนยืน 🚶 → 人 = คน",
+        sb:"人 radical ที่พบทุกที่: 男人(ผู้ชาย) 女人(ผู้หญิง) 中国人(คนจีน) 泰国人(คนไทย)" }
+    ],
+    trick:"泰国人 = 'ไทย + ประเทศ + คน' → คนไทย! 🇹🇭 บอกว่าเป็นคนไทยแล้ว คนจีนมักจะตื่นเต้นและพูดว่า 'สวัสดีครับ!' หรือ '泰国很好！'",
+    extra:"ประเทศอื่นที่อาจต้องพูด: 我来自泰国(wǒ láizì Tàiguó = ฉันมาจากประเทศไทย) / 我住在曼谷(ฉันอยู่กรุงเทพ)",
+    examples:[
+      { zh:"你好！我是泰国人，很高兴认识你！", py:"(Nǐ hǎo! Wǒ shì Tàiguó rén, hěn gāoxìng rènshi nǐ!)", th:"สวัสดี! ฉันเป็นคนไทย ยินดีที่รู้จักนะคะ!" },
+      { zh:"我是泰国人，我的中文不太好，请多关照！", py:"(Wǒ shì Tàiguó rén, wǒ de Zhōngwén bù tài hǎo, qǐng duō guānzhào!)", th:"ฉันเป็นคนไทย ภาษาจีนไม่ค่อยดี ฝากเนื้อฝากตัวด้วยนะคะ!" }
+    ]
+  }
+];
+
+let idx = 0;
+
+function updateProgress(){
+  const pct = Math.round(((idx+1)/cards.length)*100);
+  document.getElementById('pbar').style.width = pct+'%';
+  document.getElementById('ptext').textContent = `${idx+1} / ${cards.length}  (${pct}%)  ·  Session 2 of 5-month plan`;
+}
+
+function renderDivider(c){
+  const topicsHTML = c.topics.map(t=>`<div>• ${t}</div>`).join('');
+  document.getElementById('card').innerHTML = `
+    <div class="month-divider">
+      <div class="month-icon">🌱</div>
+      <div class="month-th">เดือน 1 — พฤษภาคม (ต่อ)</div>
+      <div class="month-en">Session 2 · 14 cards เพิ่มเติม</div>
+      <div class="recap-box">${c.recap}</div>
+      <div class="month-topics"><b>Session นี้จะเรียน:</b><br>${topicsHTML}</div>
+    </div>`;
+}
+
+function renderCard(c){
+  const radsHTML = c.radicals.map(r=>`
+    <div class="rad-row"><div>
+      <span class="hl ${r.hc}">${r.hl}</span>
+      <span style="font-size:12.5px;color:#777">(${r.py})</span>
+      = ${r.mn} <span style="color:#777">→</span>
+      <span style="font-size:13.5px">${r.dt}</span>
+      ${r.sb?`<span class="sub">${r.sb}</span>`:''}
+    </div></div>`).join('');
+
+  const exHTML = c.examples.map(e=>`
+    <div class="ex-item">
+      <span class="zh-s">${e.zh}</span>
+      <span class="py-s">${e.py}</span>
+      <span class="th-s">= ${e.th}</span>
+    </div>`).join('');
+
+  document.getElementById('card').innerHTML = `
+    <div class="card-top">
+      <div class="word-section">
+        <div><span class="cat-badge">${c.badge}</span></div>
+        <div class="blob-wrap" style="--bc:${c.blob}">
+          <div class="zh-main">${c.word}</div>
+        </div>
+        <div class="py-main">${c.py}</div>
+        <div class="th-main">${c.mean}</div>
+      </div>
+      <div class="emoji-box">${c.emoji}</div>
+    </div>
+    <hr>
+    <div class="sec-label">รากศัพท์ :</div>
+    ${radsHTML}
+    <div class="trick"><span class="tl">TRICK 💡 </span>${c.trick}</div>
+    ${c.extra?`<div class="extra">${c.extra}</div>`:''}
+    ${c.pair?`<div class="pair-box">${c.pair}</div>`:''}
+    <div class="sec-label">Example :</div>
+    ${exHTML}`;
+}
+
+function render(){
+  const c = cards[idx];
+  if(c.type==='divider') renderDivider(c); else renderCard(c);
+  updateProgress();
+  document.getElementById('prev').disabled = idx===0;
+  document.getElementById('next').disabled = idx===cards.length-1;
+}
+
+function go(d){
+  idx = Math.max(0, Math.min(cards.length-1, idx+d));
+  render();
+}
+
+render();
+</script>
+</body>
+</html>
